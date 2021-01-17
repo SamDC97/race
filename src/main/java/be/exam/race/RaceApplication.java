@@ -2,6 +2,8 @@ package be.exam.race;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 public class RaceApplication {
@@ -10,4 +12,8 @@ public class RaceApplication {
 		SpringApplication.run(RaceApplication.class, args);
 	}
 
+	@Bean
+	public RestTemplate restTemplate(){
+		return new RestTemplate();
+	}
 }
