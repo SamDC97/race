@@ -19,17 +19,17 @@ public class RaceResource {
     @Autowired
     private RaceService raceService;
 
-    @GetMapping("/generate-races")
-    public ResponseEntity<List<Race>> generateCalendar(){
-        return new ResponseEntity<>(raceService.generateRaces(), HttpStatus.OK);
+    @GetMapping("/generate-races/{numberOfRaces}")
+    public ResponseEntity<List<Race>> generateCalendar(@PathVariable int numberOfRaces){
+        return new ResponseEntity<>(raceService.generateRaces(numberOfRaces), HttpStatus.OK);
     }
 
-    @GetMapping("/calendars")
+    @GetMapping("/races")
     public ResponseEntity<List<Race>> getAll(){
         return new ResponseEntity<>(raceService.getAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/calendar/{id}")
+    @GetMapping("/races/{id}")
     public ResponseEntity<Race> getById(@PathVariable Long id){
         return new ResponseEntity<>(raceService.getById(id), HttpStatus.OK);
     }

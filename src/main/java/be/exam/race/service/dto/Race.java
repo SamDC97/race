@@ -12,12 +12,5 @@ import java.util.List;
 public class Race {
 
     private Long id;
-    private Long calendarId;
-    private List<Long> position;
-    private List<Long> driverId;
-    private List<Integer> points;
-
-    private GP gp;
-    private List<Driver> drivers;
-    private Calendar calendar;
+    private List<Position> positions;
 }
