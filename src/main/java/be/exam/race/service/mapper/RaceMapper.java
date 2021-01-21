@@ -31,8 +31,8 @@ public class RaceMapper {
 
     private List<PositionVO> toPositionEntities(List<Position> positions) {
         List<PositionVO> positionVOs = new ArrayList<>();
-        for(Position position : positions){
-            positionVOs.add(new PositionVO(Ranking.from(position.getRank()), position.getDriverId()));
+        for(int i = 0; i <= positions.size()+1; i++){
+            positionVOs.add(new PositionVO((long)i, Ranking.from(positions.get(i).getRank()), positions.get(i).getDriverId()));
         }
         return positionVOs;
     }

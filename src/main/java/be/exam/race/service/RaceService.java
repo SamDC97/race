@@ -2,6 +2,7 @@ package be.exam.race.service;
 
 import be.exam.race.domain.PositionVO;
 import be.exam.race.domain.RaceEntity;
+import be.exam.race.domain.repository.PositionVORepository;
 import be.exam.race.domain.repository.RaceRepository;
 import be.exam.race.service.dto.Driver;
 import be.exam.race.service.dto.Race;
@@ -26,6 +27,8 @@ public class RaceService {
 
     @Autowired
     private RaceRepository raceRepository;
+    @Autowired
+    private PositionVORepository positionVORepository;
     @Autowired
     private RaceMapper raceMapper;
     @Autowired
@@ -72,7 +75,9 @@ public class RaceService {
         Collections.shuffle(driverIds);
         List<PositionVO> positions = new ArrayList<>();
         for (int i = 1; i < driverIds.size(); i++) {
-            positions.add(new PositionVO(from(i), driverIds.get(i)));
+            PositionVO positionVO = new PositionVO((long) i, from(i), driverIds.get(i));
+            positionVORepository.save(positionVO);
+            positions.add(positionVO);
         }
         return positions;
     }
