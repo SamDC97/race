@@ -1,19 +1,20 @@
 package be.exam.race.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PositionVO {
+public class PositionEntity {
 
     @Id
+    @GeneratedValue
     private Long id;
     private Ranking ranking;
     private Long driverId;

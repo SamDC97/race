@@ -1,6 +1,6 @@
 package be.exam.race.service.mapper;
 
-import be.exam.race.domain.PositionVO;
+import be.exam.race.domain.PositionEntity;
 import be.exam.race.domain.RaceEntity;
 import be.exam.race.domain.Ranking;
 import be.exam.race.service.dto.Position;
@@ -14,27 +14,32 @@ import java.util.List;
 public class RaceMapper {
 
     public RaceEntity toEntity(Race race){
-        return new RaceEntity(race.getId(), toPositionEntities(race.getPositions()));
+        return RaceEntity.builder()
+                .positionEntity(toPositionEntities(race.getPositions()))
+                .build();
     }
 
     public Race toDTO(RaceEntity raceEntity){
-        return new Race(raceEntity.getId(), toPositionDTOs(raceEntity.getPositionVO()));
+        return new Race(raceEntity.getId(), toPositionDTOs(raceEntity.getPositionEntity()));
     }
 
-    private List<Position> toPositionDTOs(List<PositionVO> positionVOs) {
+    private List<Position> toPositionDTOs(List<PositionEntity> positionEntities) {
         List<Position> positions = new ArrayList<>();
-        for(PositionVO positionVO : positionVOs){
-            positions.add(new Position(positionVO.getDriverId(), positionVO.getRanking().getRank(), positionVO.getRanking().getPoints()));
+        for(PositionEntity positionEntity : positionEntities){
+            positions.add(new Position(positionEntity.getDriverId(), positionEntity.getRanking().getRank(), positionEntity.getRanking().getPoints()));
         }
         return positions;
     }
 
-    private List<PositionVO> toPositionEntities(List<Position> positions) {
-        List<PositionVO> positionVOs = new ArrayList<>();
+    private List<PositionEntity> toPositionEntities(List<Position> positions) {
+        List<PositionEntity> positionEntities = new ArrayList<>();
         for(int i = 0; i <= positions.size()+1; i++){
-            positionVOs.add(new PositionVO((long)i, Ranking.from(positions.get(i).getRank()), positions.get(i).getDriverId()));
+            positionEntities.add(PositionEntity.builder()
+                    .ranking(Ranking.from(positions.get(i).getRank()))
+                    .driverId(positions.get(i).getDriverId())
+                    .build());
         }
-        return positionVOs;
+        return positionEntities;
     }
 
     public List<Race> toDTO(List<RaceEntity> raceEntities) {

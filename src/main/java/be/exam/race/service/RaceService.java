@@ -1,8 +1,8 @@
 package be.exam.race.service;
 
-import be.exam.race.domain.PositionVO;
+import be.exam.race.domain.PositionEntity;
 import be.exam.race.domain.RaceEntity;
-import be.exam.race.domain.repository.PositionVORepository;
+import be.exam.race.domain.repository.PositionEntityRepository;
 import be.exam.race.domain.repository.RaceRepository;
 import be.exam.race.service.dto.Driver;
 import be.exam.race.service.dto.Race;
@@ -28,7 +28,7 @@ public class RaceService {
     @Autowired
     private RaceRepository raceRepository;
     @Autowired
-    private PositionVORepository positionVORepository;
+    private PositionEntityRepository positionEntityRepository;
     @Autowired
     private RaceMapper raceMapper;
     @Autowired
@@ -40,7 +40,7 @@ public class RaceService {
     public List<Race> generateRaces(int numberOfRaces) {
         List<RaceEntity> races = new ArrayList<>();
 
-        for (int i = 0; i < numberOfRaces; i++) {
+        for (int i = 1; i <= numberOfRaces; i++) {
             RaceEntity race = generateRace(i);
             raceRepository.save(race);
             races.add(race);
@@ -67,17 +67,22 @@ public class RaceService {
     }
 
     private RaceEntity generateRace(int raceId) {
-        return new RaceEntity((long) raceId, generatePositions());
+        return RaceEntity.builder()
+                .positionEntity(generatePositions())
+                .build();
     }
 
-    private List<PositionVO> generatePositions() {
+    private List<PositionEntity> generatePositions() {
         List<Long> driverIds = getRESTDrivers().stream().map(driver -> driver.getId()).collect(Collectors.toList());
         Collections.shuffle(driverIds);
-        List<PositionVO> positions = new ArrayList<>();
-        for (int i = 1; i < driverIds.size(); i++) {
-            PositionVO positionVO = new PositionVO((long) i, from(i), driverIds.get(i));
-            positionVORepository.save(positionVO);
-            positions.add(positionVO);
+        List<PositionEntity> positions = new ArrayList<>();
+        for (int i = 1; i <= driverIds.size(); i++) {
+            PositionEntity positionEntity = PositionEntity.builder()
+                    .driverId(driverIds.get(i-1))
+                    .ranking(from(i))
+                    .build();
+            positionEntityRepository.save(positionEntity);
+            positions.add(positionEntity);
         }
         return positions;
     }
