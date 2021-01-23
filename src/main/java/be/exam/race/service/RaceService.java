@@ -4,6 +4,7 @@ import be.exam.race.domain.PositionEntity;
 import be.exam.race.domain.RaceEntity;
 import be.exam.race.domain.repository.PositionEntityRepository;
 import be.exam.race.domain.repository.RaceRepository;
+import be.exam.race.service.dto.Circuit;
 import be.exam.race.service.dto.Driver;
 import be.exam.race.service.dto.Race;
 import be.exam.race.service.mapper.RaceMapper;
@@ -36,18 +37,40 @@ public class RaceService {
 
     @Value("${url.driver}")
     private String driverURL;
+    @Value("${url.circuits}")
+    private String circuitsURL;
 
     public List<Race> generateRaces(int numberOfRaces) {
         List<RaceEntity> races = new ArrayList<>();
+        List<Circuit> circuits = new ArrayList<>();
+
+        ResponseEntity<List<Circuit>> response = restTemplate.exchange(circuitsURL, HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<Circuit>>() {}) ;
+        if (response.getStatusCode() == HttpStatus.OK) {
+            circuits = response.getBody();
+            Collections.shuffle(circuits);
+        } else {
+            throw new RuntimeException("Failed to get circuits.");
+        }
 
         for (int i = 1; i <= numberOfRaces; i++) {
             RaceEntity race = generateRace(i);
+            race.setCircuitId(getCircuitId(i-1, circuits));
             raceRepository.save(race);
             races.add(race);
         }
         List<Race> raceResults = raceMapper.toDTO(races);
 
         return raceResults;
+    }
+
+    private Long getCircuitId(int index, List<Circuit> circuits) {
+        try{
+          return circuits.get(index).getId();
+        } catch (IndexOutOfBoundsException e){
+            int newIndex = index - circuits.size();
+            return getCircuitId(newIndex, circuits);
+        }
     }
 
     public List<Race> getAll() {

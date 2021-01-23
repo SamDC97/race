@@ -23,4 +23,5 @@ public class RaceEntity {
     private Long id;
     @OneToMany
     private List<PositionEntity> positionEntity;
+    private Long circuitId;
 }

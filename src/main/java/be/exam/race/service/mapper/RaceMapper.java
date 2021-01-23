@@ -16,11 +16,12 @@ public class RaceMapper {
     public RaceEntity toEntity(Race race){
         return RaceEntity.builder()
                 .positionEntity(toPositionEntities(race.getPositions()))
+                .circuitId(race.getCircuitId())
                 .build();
     }
 
     public Race toDTO(RaceEntity raceEntity){
-        return new Race(raceEntity.getId(), toPositionDTOs(raceEntity.getPositionEntity()));
+        return new Race(raceEntity.getId(), toPositionDTOs(raceEntity.getPositionEntity()), raceEntity.getCircuitId());
     }
 
     private List<Position> toPositionDTOs(List<PositionEntity> positionEntities) {

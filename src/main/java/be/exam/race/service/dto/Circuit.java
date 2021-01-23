@@ -1,17 +1,13 @@
 package be.exam.race.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Race {
-
+public class Circuit {
     private Long id;
-    private List<Position> positions;
-    private Long circuitId;
 }
